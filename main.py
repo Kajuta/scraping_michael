@@ -22,8 +22,10 @@ with open('line_setting.json','r') as f:
     line_setting = json.load(f)
 
 print(line_setting)
-CHANNEL_ACCESS_TOKEN = line_setting.get('channel_access_token')
-DEVELOPER_USER_ID = line_setting.get('developer_user_id')
+# CHANNEL_ACCESS_TOKEN = line_setting.get('channel_access_token')
+# DEVELOPER_USER_ID = line_setting.get('developer_user_id')
+CHANNEL_ACCESS_TOKEN = os.getenv("CHANNEL_ACCESS_TOKEN")
+DEVELOPER_USER_ID = os.getenv("DEVELOPER_USER_ID")
 
 line_bot_api = LineBotApi(CHANNEL_ACCESS_TOKEN)
 
