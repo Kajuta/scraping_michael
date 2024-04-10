@@ -22,10 +22,10 @@ with open('line_setting.json','r') as f:
     line_setting = json.load(f)
 
 print(line_setting)
-YOUR_CHANNEL_ACCESS_TOKEN = line_setting.get('channel_access_token')
+CHANNEL_ACCESS_TOKEN = line_setting.get('channel_access_token')
 DEVELOPER_USER_ID = line_setting.get('developer_user_id')
 
-line_bot_api = LineBotApi(YOUR_CHANNEL_ACCESS_TOKEN)
+line_bot_api = LineBotApi(CHANNEL_ACCESS_TOKEN)
 
 @app.route(rule='/push_wagatomo',methods=['GET'])
 def push_wagatomo():

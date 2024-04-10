@@ -21,7 +21,7 @@ def wagatomo_scrape():
     wagatomo_div = wagatomo_cont.find(class_='phase2_outer clearfix')
     wagatomo_spans = wagatomo_div.find_all('span')
     date_span =0
-    title_span = [span.text for span in wagatomo_spans if '今週のことば' in span.text or 'わが友' in span.text]
+    title_span = [span.text for span in wagatomo_spans if '月々日々に' in span.text ]
     date_span = [span.text for span in wagatomo_spans if 'ts_days' in span.get('class')]
     title = title_span[0] if len(title_span) > 0 else ''
     to_day = date_span[0] if len(date_span) > 0 else ''
