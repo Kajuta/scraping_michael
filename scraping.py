@@ -1,14 +1,10 @@
 from bs4 import BeautifulSoup
-
 import requests
-
-import util
 
 # URLS
 cnsSEIKYO_URL = {
     'wagatomo':'https://www.seikyoonline.com/news/wagatomo/'
 }
-
 
 def wagatomo_scrape():
     content = get_content_by_url(url=cnsSEIKYO_URL['wagatomo'])
