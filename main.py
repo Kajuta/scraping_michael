@@ -1,6 +1,9 @@
+
+import os
 from util import json
 from flask import Flask , request ,abort
  
+# Line SDK ---------------------
 from linebot import (
     LineBotApi, WebhookHandler
 )
@@ -10,19 +13,36 @@ from linebot.exceptions import (
 from linebot.models import (
     MessageEvent, TextMessage, TextSendMessage,
 )
-import os
 
+# OpenAi ------------------------
+from openai import OpenAI
+
+# original ----------------------
 from scraping import wagatomo_scrape
 
+
+
+
+# main code ---------------------
 app = Flask(__name__)
  
-#環境変数取得
+#Line instance
 CHANNEL_ACCESS_TOKEN = os.getenv("CHANNEL_ACCESS_TOKEN")
 DEVELOPER_USER_ID = os.getenv("DEVELOPER_USER_ID")
 CHANNEL_SECRET = os.getenv('CHANNEL_SECRET')
 
 line_bot_api = LineBotApi(CHANNEL_ACCESS_TOKEN)
 handler = WebhookHandler(CHANNEL_SECRET)
+
+# open ai instance
+OPEN_AI_KEY = os.getenv('OPEN_AI_KEY')
+OPEN_AI_PROJECT_ID = os.getenv('OPEN_AI_PROJECT_ID')
+
+OpenAI(
+    organization=OPEN_AI_KEY,
+    project=OPEN_AI_PROJECT_ID
+)
+
 
 @app.get(rule='/')
 def tester():
