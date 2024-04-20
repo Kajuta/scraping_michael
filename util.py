@@ -1,5 +1,4 @@
-import json
-import re
+from lib import json , re
 
 def loggingScrap(dictObj) -> None:
     if isinstance(dictObj,dict):
@@ -18,4 +17,3 @@ def textInstr(text,instr):
         'result':res
     }
     return ret
-

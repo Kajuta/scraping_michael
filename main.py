@@ -1,21 +1,21 @@
 
-import os
-from util import json
+
+from lib import json , os
 from flask import Flask , request ,abort
  
 # Line SDK ---------------------
-from linebot import (
+from lib import (
     LineBotApi, WebhookHandler
 )
-from linebot.exceptions import (
+from lib import (
     InvalidSignatureError
 )
-from linebot.models import (
+from lib import (
     MessageEvent, TextMessage, TextSendMessage,
 )
 
 # OpenAi ------------------------
-from openai import OpenAI
+from lib import OpenAI
 
 # original ----------------------
 from scraping import wagatomo_scrape
@@ -84,6 +84,11 @@ def text_message_handler(event):
         event.reply_token,
         TextSendMessage(text=event.message.text))
     
+
+# open ai funcs
+def requestOpenAi():
+    pass
+
  
 if __name__ == "__main__":
 #    app.run()
