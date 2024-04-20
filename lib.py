@@ -32,5 +32,5 @@ from openai.types.beta import (
     AssistantToolChoice,
     AssistantToolChoiceFunction,
     AssistantToolChoiceOption,
-
 )
+from openai.types.beta.threads import RequiredActionFunctionToolCall
