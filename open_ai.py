@@ -2,28 +2,34 @@ from lib import (
     OpenAI,
     Thread,
     Message,
-    os,
+    os,load_dotenv
 )
 # open ai instance
-OPEN_AI_KEY = os.getenv('OPEN_AI_KEY')
-OPEN_AI_PROJECT_ID = os.getenv('OPEN_AI_PROJECT_ID')
-OPEN_AI_ORG_ID = os.getenv('OPEN_AI_ORG_ID')
+OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')
+OPENAI_PROJECT_ID = os.getenv('OPENAI_PROJECT_ID')
+OPENAI_ORG_ID = os.getenv('OPENAI_ORG_ID')
 
-client = OpenAI(
-    api_key=OPEN_AI_KEY,
-    organization=OPEN_AI_ORG_ID,
-    project=OPEN_AI_PROJECT_ID
-)
+if any([ OPENAI_API_KEY==None , OPENAI_ORG_ID==None , OPENAI_PROJECT_ID==None]):
+    # local env
+    load_dotenv(override=True)  
+    load_dotenv('.env')
+    OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')
+    OPENAI_PROJECT_ID = os.getenv('OPENAI_PROJECT_ID')
+    OPENAI_ORG_ID = os.getenv('OPENAI_ORG_ID')
 
-def get_thread_run(thread_id=None, run_id=None, message_list:list[Message]=None):
-    if thread_id is None and message_list is not None:
-        thread_run = client.beta.threads.create_and_run(
-            messages=message_list
-        )
-    else:
-        thread_run = client.beta.threads.runs.create(
-            thread_id=thread_id
-        )
+MODEL = 'gpt-3.5-turbo'
 
-        
+client = OpenAI()
+
+def get_completion(messages=[]):
+    return client.chat.completions.create(
+        model=MODEL,
+        messages=messages
+    )
+    
+def create_message(role:str,content:str)->list:
+    return {
+        'role': role,
+        'content':content
+    }
 
