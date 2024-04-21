@@ -33,3 +33,12 @@ def create_message(role:str,content:str)->list:
         'content':content
     }
 
+def create_empty_thread():
+    return client.beta.threads.create()
+    
+def get_thread_by_id(thread_id:str):
+    return client.beta.threads.retrieve(thread_id=thread_id)
+
+def create_thread_message(thread_id:str,role:str=None,content:str=None):
+    return client.beta.threads.messages.create(thread_id=thread_id,role=role,content=content)
+
