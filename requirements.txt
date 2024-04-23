@@ -3,4 +3,5 @@ firebase_admin==5.1.0
 Flask==2.0.1
 line_bot_sdk==2.0.1
 openai==1.23.2
+python-dotenv==1.0.1
 Requests==2.31.0
