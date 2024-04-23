@@ -77,7 +77,7 @@ def say_michael():
 def text_message_handler(event):
 
     ass_id = 'asst_EkNhmrUyW9ZrEUIBOK3sn48U'
-    th_id = 'thread_B2Sa8hANeQrsJnaZCHtyLeOu'
+    th_id = 'thread_qzonZQ1v0o5GH7aNnSOHGlrl'
 
     ai.create_thread_message(
         th_id,
