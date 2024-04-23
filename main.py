@@ -15,7 +15,7 @@ from lib import (
 )
 
 # OpenAi ------------------------
-from lib import OpenAI
+import open_ai as ai
 
 # original ----------------------
 from scraping import wagatomo_scrape
@@ -37,11 +37,6 @@ handler = WebhookHandler(CHANNEL_SECRET)
 # open ai instance
 OPEN_AI_KEY = os.getenv('OPEN_AI_KEY')
 OPEN_AI_PROJECT_ID = os.getenv('OPEN_AI_PROJECT_ID')
-
-OpenAI(
-    organization=OPEN_AI_KEY,
-    project=OPEN_AI_PROJECT_ID
-)
 
 
 @app.get(rule='/')
@@ -80,9 +75,24 @@ def say_michael():
 
 @handler.add(MessageEvent,message=TextMessage)
 def text_message_handler(event):
+
+    ass_id = 'asst_EkNhmrUyW9ZrEUIBOK3sn48U'
+    th_id = 'thread_B2Sa8hANeQrsJnaZCHtyLeOu'
+
+    ai.create_thread_message(
+        th_id,
+        'user',
+        event.message.text
+    )
+    result = ai.create_thread_run(
+        th_id,
+        ass_id
+    )
+    msg = result.data[0].content[0].text.value
+
     line_bot_api.reply_message(
         event.reply_token,
-        TextSendMessage(text=event.message.text))
+        TextSendMessage(text=msg))
     
 
 # open ai funcs

@@ -37,5 +37,5 @@ from openai.types.beta import (
 from openai.types.beta.threads import (
     RequiredActionFunctionToolCall,
     Message,
-    MessageContent
+    MessageContent,
 )
