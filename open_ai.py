@@ -63,6 +63,12 @@ def create_assistant(instructions:str,name:str,model:str="gpt-3.5-turbo-0125",to
     )
     return my_assistant
 
+def get_assistant(assistant_id:str):
+    ass = client.beta.assistants.retrieve(
+        assistant_id=assistant_id
+    )
+    return ass
+
 def create_empty_thread():
     return client.beta.threads.create()
     
