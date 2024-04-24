@@ -18,7 +18,7 @@ class Profile():
             self.metadata = {} if metadata is None else metadata
 
 class OpenaiData():
-    def __init__(self,thread_id:str,metadata=None,param_dict:dict=None) -> None:
+    def __init__(self,thread_id:str=None,metadata=None,param_dict:dict=None) -> None:
         if param_dict is not None:
             self.thread_id = param_dict.get('thread_id')
             self.metadata = param_dict.get('metadata')
@@ -40,7 +40,7 @@ class User():
             collection_name=COLLECTIOM_NAME,
             document_id=user_id
         )
-        if doc.exists:
+        if doc._exists:
             # 存在する
             if user_id == doc.get('id'):
                 self.id = user_id
@@ -51,18 +51,33 @@ class User():
             self.id = user_id
             self.openai_data = OpenaiData()
             self.profile = Profile()
+            add_db_doc(
+                collection_name=COLLECTIOM_NAME,
+                document_id=self.id,
+                document_field=self.to_dict()
+            )
+
+    def to_dict(self):
+        docment_field = self.__dict__
+        docment_field['openai_data']=docment_field.get('openai_data').__dict__
+        docment_field['profile']=docment_field.get('profile').__dict__
+        return docment_field
 
     def update_firestore_doc(self):
         '''
         現在のインスタンスの値をもとに、FirestoreのDocmentを更新する
         '''
-        docment_field = self.__dict__
-        docment_field.__setattr__('openai_data',docment_field.get('openai_data').__dict__)
-        docment_field.__setattr__('profile',docment_field.get('profile').__dict__)
-
         update_result = update_db_doc(
             collection_name=COLLECTIOM_NAME,
             document_id=self.id,
-            document_field=docment_field
+            document_field=self.to_dict()
         )
         return update_result
+
+    def delete_firestore_doc(self):
+        del_result = delete_db_doc(
+            collection_name=COLLECTIOM_NAME,
+            document_id=self.id
+        )
+        print(del_result)
+        return del_result
