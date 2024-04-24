@@ -11,7 +11,8 @@ from lib import (
     InvalidSignatureError
 )
 from lib import (
-    MessageEvent, TextMessage, TextSendMessage,
+    MessageEvent, TextMessage, TextSendMessage,FollowEvent,UnfollowEvent
+    
 )
 
 # OpenAi ------------------------
@@ -19,9 +20,7 @@ import open_ai as ai
 
 # original ----------------------
 from scraping import wagatomo_scrape
-
-
-
+from user import User
 
 # main code ---------------------
 app = Flask(__name__)
@@ -33,11 +32,6 @@ CHANNEL_SECRET = os.getenv('CHANNEL_SECRET')
 
 line_bot_api = LineBotApi(CHANNEL_ACCESS_TOKEN)
 handler = WebhookHandler(CHANNEL_SECRET)
-
-# open ai instance
-OPEN_AI_KEY = os.getenv('OPEN_AI_KEY')
-OPEN_AI_PROJECT_ID = os.getenv('OPEN_AI_PROJECT_ID')
-
 
 @app.get(rule='/')
 def tester():
@@ -73,20 +67,38 @@ def say_michael():
 
     return 'OK'
 
+
+@handler.add(FollowEvent)
+def follow_event_hundler(event:FollowEvent):
+    U = User(user_id=event.source.user_id)
+
+
 @handler.add(MessageEvent,message=TextMessage)
-def text_message_handler(event):
+def text_message_handler(event:MessageEvent):
 
-    ass_id = 'asst_EkNhmrUyW9ZrEUIBOK3sn48U'
-    th_id = 'thread_qzonZQ1v0o5GH7aNnSOHGlrl'
+    U = User(user_id=event.source.user_id)
 
+    # スレッドの有無を確認
+    if U.openai_data.thread_id is None:
+        # create thread
+        th = ai.create_empty_thread()
+        U.openai_data.thread_id = th.id
+
+    else:
+        # 
+        th = ai.get_thread(thread_id=U.openai_data.thread_id)
+
+    # メッセージを追加
     ai.create_thread_message(
-        th_id,
+        U.openai_data.thread_id,
         'user',
         event.message.text
     )
+
+    # run
     result = ai.create_thread_run(
-        th_id,
-        ass_id
+        thread_id=U.openai_data.thread_id,
+        assistant_id=ai.OPENAI_ASS_ID
     )
     msg = result.data[0].content[0].text.value
 
@@ -94,10 +106,9 @@ def text_message_handler(event):
         event.reply_token,
         TextSendMessage(text=msg))
     
+    # 保存
+    U.update_firestore_doc()
 
-# open ai funcs
-def requestOpenAi():
-    pass
 
  
 if __name__ == "__main__":

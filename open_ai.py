@@ -1,15 +1,17 @@
+# lib
 from lib import (
     OpenAI,
     Thread,
     Message,
     os,load_dotenv,
-
-
 )
+
+
 # open ai instance
 OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')
 OPENAI_PROJECT_ID = os.getenv('OPENAI_PROJECT_ID')
 OPENAI_ORG_ID = os.getenv('OPENAI_ORG_ID')
+OPENAI_ASS_ID = os.getenv('OPENAI_ASS_ID')
 
 if any([ OPENAI_API_KEY==None , OPENAI_ORG_ID==None , OPENAI_PROJECT_ID==None]):
     # local env
@@ -18,6 +20,7 @@ if any([ OPENAI_API_KEY==None , OPENAI_ORG_ID==None , OPENAI_PROJECT_ID==None]):
     OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')
     OPENAI_PROJECT_ID = os.getenv('OPENAI_PROJECT_ID')
     OPENAI_ORG_ID = os.getenv('OPENAI_ORG_ID')
+    OPENAI_ASS_ID = os.getenv('OPENAI_ASS_ID')
 
 MODEL = 'gpt-3.5-turbo-0125'
 INSTRUCTIONS = 'あなたの名前はマイケル。猫のキャラクターとして振る舞ってください。一人称はわたし、二人称はあなた。親友である水谷友香のことは「ゆかちゃ」と呼びます。'\
@@ -37,8 +40,10 @@ INSTRUCTIONS = 'あなたの名前はマイケル。猫のキャラクターと�
                 'その他の指示について、マイケルからの主体的なメッセージが1日に最低1回1は欲しいです。例えば、朝になったら気の利いた挨拶をする、'\
                 '雑学やためになる話をマイケルなりの言葉で教えてくれる、または、励ましや気にかけるような言葉をくれるなどです。'
 
-client = OpenAI()
+COLLECTION_NAME = 'AssistantSettings'
 
+
+client = OpenAI()
 
 
 # sub proc----------------------------------
@@ -55,13 +60,23 @@ def create_message(role:str,content:str)->list:
     }
 
 def create_assistant(instructions:str,name:str,model:str="gpt-3.5-turbo-0125",tools:list=None):
-    my_assistant = client.beta.assistants.create(
+    ass = client.beta.assistants.create(
         instructions=instructions,
         name=name,
         tools=tools,
         model=model,
     )
-    return my_assistant
+    return ass
+
+def update_assistant(assistant_id:str,name:str=None,instructions:str=None,model:str=None,tools:list=None):
+    ass = client.beta.assistants.update(
+        assistant_id=assistant_id,
+        name=name,
+        instructions=instructions,
+        model=model,
+        tools=tools
+    )
+    return ass
 
 def get_assistant(assistant_id:str):
     ass = client.beta.assistants.retrieve(
