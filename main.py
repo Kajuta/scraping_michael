@@ -83,6 +83,8 @@ def text_message_handler(event:MessageEvent):
         # create thread
         th = ai.create_empty_thread()
         U.openai_data.thread_id = th.id
+        # 保存
+        U.update_firestore_doc()
 
     else:
         # 
@@ -106,8 +108,7 @@ def text_message_handler(event:MessageEvent):
         event.reply_token,
         TextSendMessage(text=msg))
     
-    # 保存
-    U.update_firestore_doc()
+    
 
 
  
