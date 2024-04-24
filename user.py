@@ -1,6 +1,6 @@
 from firebase import add_db_doc,get_db_doc,update_db_doc,delete_db_doc
 
-COLLECTIOM_NAME = ''
+COLLECTIOM_NAME = 'Users'
 
 class Profile():
     def __init__(self,name=None,sex=None,birthday=None,address=None,metadata=None,param_dict:dict=None) -> None:
