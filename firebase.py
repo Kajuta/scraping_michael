@@ -22,17 +22,24 @@ def get_firestore_client():
 
 def get_db_doc(collection_name,document_id):
     db = get_firestore_client()
-    return db.collection(collection_name).document(document_id).get()
+    doc = db.collection(collection_name).document(document_id).get()
+    db.close()
+    return doc
 
 def add_db_doc(collection_name, document_id,document_field):
     db = get_firestore_client()
-    return db.collection(collection_name).add(document_field,document_id)
+    result = db.collection(collection_name).add(document_field,document_id)
+    db.close()
+    return result
 
 def update_db_doc(collection_name, document_id,document_field):
     db = get_firestore_client()
-    return db.collection(collection_name).document(document_id).update(document_field)
+    result = db.collection(collection_name).document(document_id).update(document_field)
+    db.close()
+    return result
 
 def delete_db_doc(collection_name,document_id):
     db = get_firestore_client()
-    return db.collection(collection_name).document(document_id).delete()
-
+    del_result = db.collection(collection_name).document(document_id).delete()
+    db.close()
+    return del_result
