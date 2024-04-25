@@ -115,7 +115,7 @@ def text_message_handler(event:MessageEvent):
         spl = mt[0].split(':')
         ass = ai.get_assistant(assistant_id=ai.OPENAI_ASS_ID)
         instructions = ass.instructions + spl[1]
-        ass_upd = ai.update_assistant(assistant_id=ass.id,instructions=instructions)
+        ass_upd = ai.update_assistant(assistant_id=ass.id,name=ass.name,model=ai.MODEL,instructions=instructions,tools=[])
         print(ass_upd)
         line_bot_api.reply_message(
             reply_token=event.reply_token,
