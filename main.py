@@ -112,7 +112,7 @@ def text_message_handler(event:MessageEvent):
     rgex = re.compile(DEVELOPER_KEYWORD+'*')
     mt = rgex.match(event.message.text)
     if mt is not None:
-        spl = ':'.split(mt[0])
+        spl = mt[0].split(':')
         ass = ai.get_assistant(assistant_id=ai.OPENAI_ASS_ID)
         instructions = ass.instructions + spl[1]
         ass_upd = ai.update_assistant(assistant_id=ass.id,instructions=instructions)
