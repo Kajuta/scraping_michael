@@ -109,9 +109,9 @@ def unfollow_event_hundler(event:UnfollowEvent):
 @handler.add(MessageEvent,message=TextMessage)
 def text_message_handler(event:MessageEvent):
 
-    rgex = re.compile(r''+DEVELOPER_KEYWORD+'*')
+    rgex = re.compile(DEVELOPER_KEYWORD+'*')
     mt = rgex.match(event.message.text)
-    if mt:
+    if mt is not None:
         spl = ':'.split(mt[0])
         ass = ai.get_assistant(assistant_id=ai.OPENAI_ASS_ID)
         instructions = ass.instructions + spl[1]
