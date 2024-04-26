@@ -113,14 +113,27 @@ def text_message_handler(event:MessageEvent):
     mt = rgex.match(event.message.text)
     if mt is not None:
         spl = event.message.text.split(':')
-        ass = ai.get_assistant(assistant_id=ai.OPENAI_ASS_ID)
-        instructions = ass.instructions + spl[1]
-        ass_upd = ai.update_assistant(assistant_id=ass.id,name=ass.name,model=ai.MODEL,instructions=instructions,tools=[])
-        print(ass_upd)
+        if len(spl)!=3:
+            print(f'spl:{spl}')
+            line_bot_api.reply_message(
+                reply_token=event.reply_token,
+                messages=TextSendMessage(text='error:\n' + 'コード認識不可'))
+            return 'OK'
+    
+        key = spl[1]
+        val = spl[2]
+        if key == 'update_instructions':
+            ass = ai.get_assistant(assistant_id=ai.OPENAI_ASS_ID)
+            ass_upd = ai.update_assistant(assistant_id=ass.id,name=ass.name,model=ai.MODEL,instructions=val,tools=[])
+            system_msg = 'updated instructions:\n' + ass_upd.instructions
+
+        elif key == 'get_instructions':
+            ass = ai.get_assistant(assistant_id=ai.OPENAI_ASS_ID)
+            system_msg = 'get instructions:\n' + ass.instructions
+
         line_bot_api.reply_message(
             reply_token=event.reply_token,
-            messages=TextSendMessage(text='assistant_instructions:\n' + instructions)
-        )
+            messages=TextSendMessage(text=system_msg))
         return 'OK'
 
     U = User(user_id=event.source.user_id)
